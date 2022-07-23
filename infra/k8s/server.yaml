@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nest-typeorm
+  name: nest-typeorm-server
+spec:
+  selector:
+    matchLabels:
+      app: nest-typeorm-server
+  template:
+    metadata:
+      labels:
+        app: nest-typeorm-server
+    spec:
+      containers:
+      - name: nest-typeorm-server
+        image: chrislegaxy/nest-typeorm-server
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
+        env:
+          - name: POSTGRESQL_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: nest-typeorm-config-map
+                key: POSTGRESQL_HOST
+          - name: POSTGRESQL_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: nest-typeorm-config-map
+                key: POSTGRESQL_USERNAME
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: nest-typeorm-config-map
+                key: POSTGRESQL_PASSWORD
+          - name: POSTGRESQL_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: nest-typeorm-config-map
+                key: POSTGRESQL_DATABASE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: nest-typeorm
+  name: nest-typeorm-svc
+spec:
+  selector:
+    app: nest-typeorm-server
+  ports:
+    - name: nest-typeorm-server
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
