@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: prod
     environment:
       POSTGRESQL_HOST: db
       POSTGRESQL_USERNAME: ${POSTGRESQL_USERNAME}
