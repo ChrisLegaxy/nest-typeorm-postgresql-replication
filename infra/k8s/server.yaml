@@ -15,10 +15,21 @@ spec:
       containers:
       - name: nest-typeorm-server
         image: chrislegaxy/nest-typeorm-server
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
         resources:
           limits:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "500Mi"
+            cpu: "2"
+          requests:
+            memory: "500Mi"
+            cpu: "1"
         ports:
         - containerPort: 3000
         env:
