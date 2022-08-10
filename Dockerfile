@@ -1,5 +1,4 @@
-# For Development Environment
-FROM node:14-alpine
+FROM node:14-alpine as base
 
 # Work Directory
 WORKDIR /usr/src/app
@@ -17,10 +16,18 @@ RUN yarn install
 # Copy app source to work directory
 COPY . .
 
-# Build project
+FROM base as dev
+
+CMD ["yarn", "start:dev"]
+
+FROM dev as build
+
 RUN yarn build
+
+FROM base as prod
+
+COPY --chown=node:node --from=build /usr/src/app/dist/ ./dist
 
 RUN apk del .build-deps && apk add --no-cache --virtual .app-deps ffmpeg
 
-# Build and run the app
 CMD ["node", "./dist/main.js"]
