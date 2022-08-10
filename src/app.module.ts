@@ -7,6 +7,7 @@ import applicationConfig from "@/configs/application.config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { DatabaseService } from "./services/database.service";
 import databaseConfig from "./configs/database.config";
+import { HealthModule } from "./shared/modules/health/health.module";
 
 const commonModules = [
   ConfigModule.forRoot({
@@ -17,6 +18,7 @@ const commonModules = [
     imports: [ConfigModule],
     useClass: DatabaseService
   }),
+  HealthModule,
 ];
 const modules = [UserModule];
 
